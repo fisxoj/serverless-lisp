@@ -1,0 +1,18 @@
+service: hello-lisp
+provider:
+  name: aws
+  runtime: lisp
+plugins:
+  # this registers the plugin
+  # with serverless
+  - serverless-lisp
+custom:
+  system: my-cool-function
+  package: my-cool-function
+functions:
+  greet:
+    handler: my-cool-function:hello
+    events:
+      - http:
+          path: /greet
+          method: GET
