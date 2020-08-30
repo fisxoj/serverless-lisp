@@ -85,7 +85,7 @@
           "-v" (ps:chain (list "/home/fisxoj/quicklisp/local-projects" "/root/quicklisp/local-projects" "Z") (join ":"))
           "-v" (ps:chain (list (ps:@ this src-dir) "/work" "Z") (join ":"))
           "-e" (ps:chain (list "LAMBDA_SYSTEM_NAME" (find-asd-name (ps:@ this src-dir))) (join "="))
-          "cl-aws-builder")))
+          (ps:chain (list +default-docker-image+ +default-docker-tag+) (join ":")))))
 
 
 (paren6:export-default -serverless-lisp-plugin)
