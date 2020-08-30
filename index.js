@@ -22,7 +22,7 @@ Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCK
                                                                                        'writable' : false,
                                                                                        'configurable' : false
                                                                                      });
-Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCKERTAG', { 'value' : 'a83ee81',
+Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCKERTAG', { 'value' : '4c74736',
                                                                                      'enumerable' : true,
                                                                                      'writable' : false,
                                                                                      'configurable' : false
@@ -33,8 +33,8 @@ Object.defineProperty(typeof global === 'object' ? global : window, 'NOOUTPUTCAP
                                                                                     'configurable' : false
                                                                                   });
 function findAsdName(path) {
-    for (var filename = null, _js_arrvar163 = fs.readdirSync(path), _js_idx162 = 0; _js_idx162 < _js_arrvar163.length; _js_idx162 += 1) {
-        filename = _js_arrvar163[_js_idx162];
+    for (var filename = null, _js_arrvar179 = fs.readdirSync(path), _js_idx178 = 0; _js_idx178 < _js_arrvar179.length; _js_idx178 += 1) {
+        filename = _js_arrvar179[_js_idx178];
         if (filename.indexOf('.asd') !== -1) {
             __PS_MV_REG = [];
             return filename.slice(0, filename.length - '.asd'.length);
@@ -44,8 +44,8 @@ function findAsdName(path) {
 function undefinedP(value) {
     return typeof value === 'undefined';
 };
-if ('undefined' === typeof EXTENDS782) {
-    var EXTENDS782 = null;
+if ('undefined' === typeof EXTENDS899) {
+    var EXTENDS899 = null;
 };
 function ServerlessLispPlugin(initServerless, initOptions) {
     var buildFn = this.build.bind(this);
@@ -68,10 +68,10 @@ ServerlessLispPlugin.prototype.getDockerBinary = function () {
 };
 ServerlessLispPlugin.prototype.log = function () {
     var args = Array.prototype.slice.call(arguments, 0);
-    var _js164 = this.serverless.cli;
-    var _js165 = _js164.log;
+    var _js180 = this.serverless.cli;
+    var _js181 = _js180.log;
     __PS_MV_REG = [];
-    return _js165.apply(_js164, args);
+    return _js181.apply(_js180, args);
 };
 ServerlessLispPlugin.prototype.build = function () {
     this.log('Building shared function binary...');

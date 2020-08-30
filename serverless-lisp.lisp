@@ -12,7 +12,7 @@
 
 (paren6:defconstant6 +default-docker-image+ "quay.io/fisxoj/cl-lambda-builder")
 
-(paren6:defconstant6 +default-docker-tag+ "a83ee81")
+(paren6:defconstant6 +default-docker-tag+ "4c74736")
 
 (paren6:defconstant6 +no-output-capture+ (ps:create "stdio" (list "ignore" (ps:@ process stdout) (ps:@ process stderr))))
 

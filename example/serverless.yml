@@ -2,6 +2,7 @@ service: hello-lisp
 provider:
   name: aws
   runtime: lisp
+  memorySize: 128
 plugins:
   # this registers the plugin
   # with serverless
