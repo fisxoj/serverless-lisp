@@ -73,7 +73,6 @@
     (list "run"
           "--rm"
           "-it"
-          "-v" (ps:chain (list "/home/fisxoj/quicklisp/local-projects" "/root/quicklisp/local-projects" "Z") (join ":"))
           "-v" (ps:chain (list (ps:@ this src-dir) "/work" "Z") (join ":"))
           "-e" (ps:chain (list "LAMBDA_SYSTEM_NAME" (find-asd-name (ps:@ this src-dir))) (join "="))
           (ps:chain (list +default-docker-image+ +default-docker-tag+) (join ":")))))
