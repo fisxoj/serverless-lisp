@@ -2,17 +2,21 @@ service: hello-lisp
 provider:
   name: aws
   runtime: lisp
+  memorySize: 128
 plugins:
   # this registers the plugin
   # with serverless
   - serverless-lisp
-custom:
-  system: my-cool-function
-  package: my-cool-function
 functions:
   greet:
     handler: my-cool-function:hello
     events:
       - http:
           path: /greet
-          method: GET
+          method: POST
+  bid-farewell:
+    handler: my-cool-function:goodbye
+    events:
+      - http:
+          path: /bid-farewell
+          method: POST

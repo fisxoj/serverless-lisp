@@ -12,7 +12,7 @@
 
 (paren6:defconstant6 +default-docker-image+ "quay.io/fisxoj/cl-lambda-builder")
 
-(paren6:defconstant6 +default-docker-tag+ "ba54651")
+(paren6:defconstant6 +default-docker-tag+ "4c74736")
 
 (paren6:defconstant6 +no-output-capture+ (ps:create "stdio" (list "ignore" (ps:@ process stdout) (ps:@ process stderr))))
 
@@ -48,26 +48,17 @@
   (defun build ()
     (ps:chain this (log "Building shared function binary..."))
 
+    (unless (string= (ps:@ this serverless service provider name) "aws")
+      (return))
+
     (setf (ps:@ this serverless service package exclude-dev-dependencies) ps:false)
 
     (spawn-sync (ps:chain this (get-docker-binary))
                 (ps:chain this (get-docker-args))
-                ;; +no-output-capture+
-                )
+                +no-output-capture+)
 
-    (ps:chain this
-              (functions)
-              (for-each (paren6:=> (function-name)
-                                   (ps:chain this (log "Wiring up function: " function-name))
-                                   (let* ((fun (ps:chain this serverless service (get-function function-name)))
-                                          (runtime (or (ps:@ fun runtime)
-                                                       (ps:@ this serverless service provider runtime))))
-
-                                     (when (ps:=== runtime +lisp-runtime+)
-                                       (setf (ps:@ fun package) (or (ps:@ fun package)
-                                                                    (ps:create))
-                                             (ps:@ fun package artifact) (ps:chain path (join (ps:@ this src-dir) "function.zip"))
-                                             (ps:@ fun runtime) +provided-runtime+))))))
+    (setf (ps:@ this serverless service package) (or (ps:@ this serverless service package) (ps:create))
+          (ps:@ this serverless service package artifact) (ps:chain path (join (ps:@ this src-dir) "function.zip")))
 
     (when (ps:=== (ps:@ this serverless service provider runtime) +lisp-runtime+)
       (setf (ps:@ this serverless service provider runtime) +provided-runtime+)))
@@ -82,10 +73,9 @@
     (list "run"
           "--rm"
           "-it"
-          "-v" (ps:chain (list "/home/fisxoj/quicklisp/local-projects" "/root/quicklisp/local-projects" "Z") (join ":"))
-          "-v" (ps:chain (list (ps:@ this src-dir) "/app" "Z") (join ":"))
+          "-v" (ps:chain (list (ps:@ this src-dir) "/work" "Z") (join ":"))
           "-e" (ps:chain (list "LAMBDA_SYSTEM_NAME" (find-asd-name (ps:@ this src-dir))) (join "="))
-          "cl-aws-builder")))
+          (ps:chain (list +default-docker-image+ +default-docker-tag+) (join ":")))))
 
 
 (paren6:export-default -serverless-lisp-plugin)
