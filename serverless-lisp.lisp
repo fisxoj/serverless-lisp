@@ -48,26 +48,17 @@
   (defun build ()
     (ps:chain this (log "Building shared function binary..."))
 
+    (unless (string= (ps:@ this serverless service provider name) "aws")
+      (return))
+
     (setf (ps:@ this serverless service package exclude-dev-dependencies) ps:false)
 
     (spawn-sync (ps:chain this (get-docker-binary))
                 (ps:chain this (get-docker-args))
-                ;; +no-output-capture+
-                )
+                +no-output-capture+)
 
-    (ps:chain this
-              (functions)
-              (for-each (paren6:=> (function-name)
-                                   (ps:chain this (log "Wiring up function: " function-name))
-                                   (let* ((fun (ps:chain this serverless service (get-function function-name)))
-                                          (runtime (or (ps:@ fun runtime)
-                                                       (ps:@ this serverless service provider runtime))))
-
-                                     (when (ps:=== runtime +lisp-runtime+)
-                                       (setf (ps:@ fun package) (or (ps:@ fun package)
-                                                                    (ps:create))
-                                             (ps:@ fun package artifact) (ps:chain path (join (ps:@ this src-dir) "function.zip"))
-                                             (ps:@ fun runtime) +provided-runtime+))))))
+    (setf (ps:@ this serverless service package) (or (ps:@ this serverless service package) (ps:create))
+          (ps:@ this serverless service package artifact) (ps:chain path (join (ps:@ this src-dir) "function.zip")))
 
     (when (ps:=== (ps:@ this serverless service provider runtime) +lisp-runtime+)
       (setf (ps:@ this serverless service provider runtime) +provided-runtime+)))
