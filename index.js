@@ -22,7 +22,7 @@ Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCK
                                                                                        'writable' : false,
                                                                                        'configurable' : false
                                                                                      });
-Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCKERTAG', { 'value' : 'ba54651',
+Object.defineProperty(typeof global === 'object' ? global : window, 'DEFAULTDOCKERTAG', { 'value' : 'a83ee81',
                                                                                      'enumerable' : true,
                                                                                      'writable' : false,
                                                                                      'configurable' : false
@@ -33,8 +33,8 @@ Object.defineProperty(typeof global === 'object' ? global : window, 'NOOUTPUTCAP
                                                                                     'configurable' : false
                                                                                   });
 function findAsdName(path) {
-    for (var filename = null, _js_arrvar130 = fs.readdirSync(path), _js_idx129 = 0; _js_idx129 < _js_arrvar130.length; _js_idx129 += 1) {
-        filename = _js_arrvar130[_js_idx129];
+    for (var filename = null, _js_arrvar163 = fs.readdirSync(path), _js_idx162 = 0; _js_idx162 < _js_arrvar163.length; _js_idx162 += 1) {
+        filename = _js_arrvar163[_js_idx162];
         if (filename.indexOf('.asd') !== -1) {
             __PS_MV_REG = [];
             return filename.slice(0, filename.length - '.asd'.length);
@@ -44,8 +44,8 @@ function findAsdName(path) {
 function undefinedP(value) {
     return typeof value === 'undefined';
 };
-if ('undefined' === typeof EXTENDS766) {
-    var EXTENDS766 = null;
+if ('undefined' === typeof EXTENDS782) {
+    var EXTENDS782 = null;
 };
 function ServerlessLispPlugin(initServerless, initOptions) {
     var buildFn = this.build.bind(this);
@@ -61,32 +61,27 @@ function ServerlessLispPlugin(initServerless, initOptions) {
 };
 ServerlessLispPlugin.prototype.getDockerArgs = function () {
     __PS_MV_REG = [];
-    return ['run', '--rm', '-it', '-v', ['/home/fisxoj/quicklisp/local-projects', '/root/quicklisp/local-projects', 'Z'].join(':'), '-v', [this.srcDir, '/app', 'Z'].join(':'), '-e', ['LAMBDA_SYSTEM_NAME', findAsdName(this.srcDir)].join('='), 'cl-aws-builder'];
+    return ['run', '--rm', '-it', '-v', [this.srcDir, '/work', 'Z'].join(':'), '-e', ['LAMBDA_SYSTEM_NAME', findAsdName(this.srcDir)].join('='), [DEFAULTDOCKERIMAGE, DEFAULTDOCKERTAG].join(':')];
 };
 ServerlessLispPlugin.prototype.getDockerBinary = function () {
     return process.env['SLS_DOCKER_CLI'] || 'podman';
 };
 ServerlessLispPlugin.prototype.log = function () {
     var args = Array.prototype.slice.call(arguments, 0);
-    var _js131 = this.serverless.cli;
-    var _js132 = _js131.log;
+    var _js164 = this.serverless.cli;
+    var _js165 = _js164.log;
     __PS_MV_REG = [];
-    return _js132.apply(_js131, args);
+    return _js165.apply(_js164, args);
 };
 ServerlessLispPlugin.prototype.build = function () {
     this.log('Building shared function binary...');
+    if (this.serverless.service.provider.name !== 'aws') {
+        return null;
+    };
     this.serverless.service['package'].excludeDevDependencies = false;
-    spawnSync(this.getDockerBinary(), this.getDockerArgs());
-    this.functions().forEach((function (functionName) {
-        this.log('Wiring up function: ', functionName);
-        var fun = this.serverless.service.getFunction(functionName);
-        var runtime133 = fun.runtime || this.serverless.service.provider.runtime;
-        if (runtime133 === LISPRUNTIME) {
-            fun['package'] = fun['package'] || {  };
-            fun['package'].artifact = path.join(this.srcDir, 'function.zip');
-            return fun.runtime = PROVIDEDRUNTIME;
-        };
-    }).bind(this));
+    spawnSync(this.getDockerBinary(), this.getDockerArgs(), NOOUTPUTCAPTURE);
+    this.serverless.service['package'] = this.serverless.service['package'] || {  };
+    this.serverless.service['package'].artifact = path.join(this.srcDir, 'function.zip');
     __PS_MV_REG = [];
     return this.serverless.service.provider.runtime === LISPRUNTIME ? (this.serverless.service.provider.runtime = PROVIDEDRUNTIME) : null;
 };
