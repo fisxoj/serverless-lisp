@@ -1,6 +1,6 @@
 {
   "name": "serverless-lisp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Serverless framework plugin for common lisp",
   "main": "index.js",
   "scripts": {
